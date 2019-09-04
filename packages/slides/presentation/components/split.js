@@ -1,11 +1,11 @@
 import React from 'react'
 import {Heading, Text, CodePane} from 'spectacle'
-import {useQuery} from '@apollo/react-hooks'
+import {useQuery, useMutation} from '@apollo/react-hooks'
 import {gql} from 'apollo-boost'
 import preloader from 'spectacle/lib/utils/preloader'
-import {queries} from './queries'
+import {queries, mutations} from './queries'
 
-const SplitPane = ({queryNumber}) => {
+const SplitPane = ({queryNumber, mutationNumber, isQuery = true}) => {
   const [state, setState] = React.useState({
     loading: null,
     error: null,
@@ -13,7 +13,7 @@ const SplitPane = ({queryNumber}) => {
   })
   const [shoot, setShoot] = React.useState(false)
   const {error, loading, data} = state
-  const query = queries[queryNumber]
+  const src = isQuery ? queries[queryNumber] : mutations[mutationNumber]
   return (
     <div>
       <div
@@ -23,11 +23,11 @@ const SplitPane = ({queryNumber}) => {
           width: '100%',
         }}>
         <div style={{width: '40%'}}>
-          query
-          <CodePane lang="graphql" source={query} />
+          <p>query</p>
+          <CodePane lang="graphql" source={src} />
         </div>
         <div style={{width: '40%'}}>
-          response
+          <p>response</p>
           <Response error={error} loading={loading} data={data} />
         </div>
       </div>
@@ -36,7 +36,12 @@ const SplitPane = ({queryNumber}) => {
           <button onClick={() => setShoot(true)}>🚀</button>
         </div>
       </div>
-      {shoot && <LaunchQuery query={query} response={r => setState(r)} />}
+      {isQuery && shoot && (
+        <LaunchQuery query={src} response={r => setState(r)} />
+      )}
+      {!isQuery && shoot && (
+        <LaunchMutation mutation={src} response={r => setState(r)} />
+      )}
     </div>
   )
 }
@@ -55,6 +60,24 @@ const LaunchQuery = ({query, response}) => {
   return <div></div>
 }
 
+const LaunchMutation = ({mutation, response}) => {
+  const [mut, {data, loading, error}] = useMutation(
+    gql`
+      ${mutation}
+    `
+  )
+
+  React.useEffect(() => {
+    response({data, loading, error})
+  }, [data, loading, error])
+
+  React.useEffect(() => {
+    mut()
+  }, [])
+
+  return <div></div>
+}
+
 const Response = ({loading, error, data}) => {
   let text = ''
   if (loading) {
@@ -66,7 +89,13 @@ const Response = ({loading, error, data}) => {
   } else {
     text = 'Launch query, plz'
   }
-  return <CodePane style={{minHeight: '100px'}} lang="json" source={text} />
+  return (
+    <CodePane
+      style={{maxHeight: '500px', overflowY: 'auto'}}
+      lang="json"
+      source={text}
+    />
+  )
 }
 
 export default SplitPane

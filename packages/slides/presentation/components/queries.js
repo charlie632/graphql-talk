@@ -13,4 +13,11 @@ const query2 = `
   }
 
 `
+
+const mut1 = `
+  mutation {
+    kkkkkkkkk
+  }
+`
 export const queries = [query1, query2]
+export const mutations = [mut1]
