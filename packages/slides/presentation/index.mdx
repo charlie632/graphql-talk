@@ -1,16 +1,16 @@
-import {Cite} from 'spectacle';
-import {DarkSlide, CodeSlide} from './slides';
-import RegularComponent from './regular-component';
+import {Cite, Image, Appear, Text} from 'spectacle'
+import {DarkSlide, CodeSlide} from './slides'
+import RegularComponent from './regular-component'
 import SplitPane from './components/split.js'
-
+import LocalImage from './components/local-image.js'
+import Code from './components/code.js'
 
 ![gql](https://www.amazeelabs.com/sites/default/files/styles/leading_image/public/images/current-affairs/graphql.png?h=7bd360a7&itok=q-GPNY3n)
-
-
 
 _By Carlos Ortiz_
 
 ---
+
 export default DarkSlide
 
 export const transition = ['zoom']
@@ -18,9 +18,10 @@ export const transition = ['zoom']
 # Why the hype around this?
 
 ---
-# 'cause it's
-![awesome](https://media3.giphy.com/media/mXnO9IiWWarkI/giphy.gif?cid=790b7611af0e6bfd8c9517f3bec5578fffb60ecf4ca0f76b&rid=giphy.gif)
 
+# 'cause it's
+
+![awesome](https://media3.giphy.com/media/mXnO9IiWWarkI/giphy.gif?cid=790b7611af0e6bfd8c9517f3bec5578fffb60ecf4ca0f76b&rid=giphy.gif)
 
 ---
 
@@ -33,25 +34,335 @@ export const transition = ['zoom']
 ---
 
 # So what?
+
 ![confused](https://media.giphy.com/media/YVPwi7L2izTJS/giphy.gif)
 
 ---
-<RegularComponent/>
+
+# 3 main reasons
+
+1. Type safety
+2. Self documenting
+3. Reduces number of calls
 
 ---
-## Example 1
-<SplitPane queryNumber={0}/>
----
-## Example 2
 
-<SplitPane queryNumber={1}/>
----
-
-## Example 3
-
-<SplitPane mutationNumber={0} isQuery={false}/>
+![gql](https://devopedia.org/images/article/147/8496.1558526064.jpg)
 
 ---
+
+# It all starts with a schema
+
+A way to describe your data
+
+```gql
+type User {
+  name: String!
+  id: ID!
+  orders: [Order]
+}
+
+type Order {
+  selection: Int
+  meal: String
+}
+```
+
+---
+
+# Define operations
+
+```gql
+type Query {
+  getUser(id: ID!): User
+  getUserOrders(userId: ID!): [Order]
+}
+
+type Mutation {
+  addUser(user: UserInput): User
+  addUserOrder(userId: ID!, selection: number, meal: String): Order
+}
+```
+
+---
+
+# How to call?
+
+You write a query
+
+```gql
+query GetUser {
+  getUser(id: "123abc") {
+    name
+    id
+  }
+}
+```
+
+---
+
+# Let's try it
+
+---
+
+### Query a user
+
+<SplitPane query={'baseQuery'} />
+
+---
+
+# Now let's try something
+
+---
+
+### Query a user with more fields
+
+<SplitPane query="failingQuery" />
+
+---
+
+# It throws an error!
+
+<Appear>
+  <div>
+    <i>address</i> is not defined in our schema, so GraphQL cannot access that
+    property on type User.
+  </div>
+</Appear>
+<Appear>
+  <div style={{margin: 40}}>
+    <i>This is <b>Type Safety</b> !</i>
+  </div>
+</Appear>
+
+---
+
+# What about _self documenting_?
+
+<Appear>
+  <div>
+    There's this thing called <i>Introspection</i>, that let's you peek the
+    schema and the operations you can do.
+  </div>
+</Appear>
+
+---
+
+<LocalImage image="gqldocs" />
+
+Docs based on the schema
+
+---
+
+### Add an order
+
+<SplitPane mutation="addOrder" />
+
+---
+
+### Query user orders
+
+<SplitPane query="ordersQuery" />
+
+---
+
+# Can we make this easier?
+
+<div>
+  <Appear><div style={{marginTop: 20}}> hell yeah </div></Appear>
+  <Appear><div style={{marginTop: 20}}> but we need to know how GraphQL resolves your petitions</div></Appear>
+
+</div>
+
+---
+
+# Resolvers
+
+<Appear>
+  <div>
+    Resolvers are functions, not included in the schema, that respond to
+    petitions (queries, mutations or fields).
+  </div>
+</Appear>
+
+---
+
+## Resolver map for our schema
+
+<Code src="resolver.example" lang="js" />
+
+---
+
+## Resolver signature
+
+<Code lang="js" rawSrc="fieldName(obj, args, context, info) { result }" />
+
+<Appear>
+  <div style={{ margin: 20}}>
+    <b>obj</b>: Root value. Useful for nested queries.
+  </div>
+</Appear>
+<Appear>
+  <div style={{ margin: 20}}>
+    <b>args</b>: Arguments of the query.
+  </div>
+</Appear>
+<Appear>
+  <div style={{ margin: 20}}>
+   <b>context</b>: Context of the request
+  </div>
+</Appear>
+<Appear>
+  <div style={{ margin: 20}}>
+   <b>info</b>: for pros
+  </div>
+</Appear>
+
+---
+
+### We can add a resolver for a specific field
+
+<Code src="orders.example" lang="js" />
+
+<Appear>
+  <div style={{marginTop: 20}}>
+    Everytime we ask for the `orders` field on type user, this function is
+    called.
+  </div>
+</Appear>
+
+---
+
+### Let's try it
+
+<Appear>
+  <div>
+    <SplitPane query="ordersQuery" />
+  </div>
+</Appear>
+
+---
+
+# Let's create a new query
+
+<Appear>
+  <div>
+    Let's add a <i>favouriteMeal</i> field on the <i>User</i> type, and create operations to edit and fetch it.
+  </div>
+</Appear>
+---
+
+## We need to modify the schema
+
+<Appear>
+  <div>
+    <Code src="newSchema.example" lang="graphql" />
+  </div>
+</Appear>
+
+---
+
+## Now the resolver map
+
+<Appear>
+  <div>
+    <Code src="newResolvers.example" lang="js" />
+  </div>
+</Appear>
+
+---
+
+## Let's try thissssss
+
+<Appear>
+  <div>
+    <SplitPane mutation="updateFavMeal" />
+  </div>
+</Appear>
+
+---
+
+export default DarkSlide
+
+export const transition = ['zoom']
+
+## Our app is not secure
+
+![security](https://i.giphy.com/media/xbEDt9IymF0M8/giphy.webp)
+
+---
+
+# How to secure it ?
+
+1. Send cookies, or JWT
+2. Decode and validate on server
+3. Add user information to the request's `context`
+
+---
+
+## Pass context to Apollo Server
+
+<Code lang="js" src="contextApollo.example" />
+
+---
+
+## Access the context in the resolvers
+
+<Code lang="js" src="updatedResolver.example" />
+
+<Appear>
+  <div style={{margin: 30}}>
+    <i>
+      Notice that userId is now obtained through the context and not the args.
+    </i>{' '}
+    This helps mantaining the app secure.
+  </div>
+</Appear>
+
+---
+
+### Note
+
+We need to change the variables of the `setFavouriteMeal`:
+
+```gql
+setFavouriteMeal(userId: ID!, meal: String): User
+```
+
+to
+
+```gql
+setFavouriteMeal(userId: ID, meal: String): User
+```
+
+or
+
+```gql
+setFavouriteMeal(meal: String): User
+```
+
+---
+
+### Let's try this
+
+We don't need to send the `userId` as an argument
+
+<SplitPane mutation="updateFavMealContext" />
+
+---
+
+<SplitPane query="userFavMeal" />
+
+---
+
+export default DarkSlide
+
+export const transition = ['zoom']
+
+# wrap Up
+
+---
+
 ###### Typography
 
 # Heading 1
@@ -84,6 +395,7 @@ Standard Text
 <Cite>Author</Cite>
 
 ---
+
 export default CodeSlide
 
 ```graphql

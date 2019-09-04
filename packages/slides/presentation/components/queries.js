@@ -1,23 +1,100 @@
 import {gql} from 'apollo-boost'
 
-const query1 = `
-  query {
-    hello
+const baseQuery = `
+query GetUser {
+  getUser(id: "123abc"){
+    name
+    id
+  }
+}
+
+`
+
+const userFavMeal = `
+query GetUser {
+  getUser(id: "123abc"){
+    name
+    id
+    favouriteMeal
+  }
+}
+
+`
+
+const failingQuery = `
+ query GetUser {
+  getUser(id: "123abc"){
+    name
+    id
+    address
+  }
+}
+
+`
+
+const ordersQuery = `
+  query GetUserOrders {
+    getUserOrders(userId: "123abc") {
+      meal
+      selection
+    } 
   }
 
 `
 
-const query2 = `
-  query {
-    goodbye
+const userWithOrder = `
+  query GetUserWithOrders {
+    getUser(id: "123abc") {
+      name
+      id
+      orders {
+        meal
+        selection
+      }
+    } 
   }
 
 `
 
-const mut1 = `
-  mutation {
-    kkkkkkkkk
+const addOrder = `
+  mutation AddOrder {
+    addUserOrder(userId: "123abc", selection: 3, 
+      meal: "Fish") {
+        selection
+        meal
+    }
   }
 `
-export const queries = [query1, query2]
-export const mutations = [mut1]
+
+const updateFavMeal = `
+  mutation UpdateFavMeal {
+    setFavouriteMeal(userId: "123abc", 
+      meal: "Pizza") {
+        name
+        id
+        favouriteMeal
+    }
+  }
+`
+
+const updateFavMealContext = `
+  mutation UpdateFavMeal {
+    setFavouriteMeal(meal: "Pasta") {
+        name
+        id
+        favouriteMeal
+    }
+  }
+`
+
+export const queries = {
+         baseQuery,
+         failingQuery,
+         ordersQuery,
+         userWithOrder,
+         userFavMeal,
+       }
+
+export const mutations = {
+  addOrder, updateFavMeal, updateFavMealContext
+}

@@ -1,0 +1,15 @@
+Mutation: {
+    addUser: (_, {user}) => {
+      users[user.id] = user
+      return user
+    },
+    addUserOrder: (_, {userId, selection, meal}) => {
+      orders.push({userId, selection, meal})
+      return {selection, meal}
+    },
+    setFavouriteMeal: (_, {userId, meal}) => {
+      const updatedUser = updateUser({ favouriteMeal: meal, id: userId })
+      return updatedUser
+
+    }
+  }

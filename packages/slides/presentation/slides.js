@@ -45,7 +45,7 @@ const darkComponents = {
 }
 
 export const DarkSlide = ({children, ...rest}) => (
-  <Slide bgColor="black" {...rest}>
+  <Slide bgColor="black"  {...rest}>
     <MDXProvider components={darkComponents}>{children}</MDXProvider>
   </Slide>
 )
@@ -53,7 +53,11 @@ export const DarkSlide = ({children, ...rest}) => (
 // CODE LAYOUT
 
 export const CodeSlide = ({children, ...rest}) => (
-  <Slide bgColor="#1d1f21" {...rest}>
-    <MDXProvider components={components}>{children}</MDXProvider>
-  </Slide>
-)
+         <Slide
+           bgColor="#1d1f21"
+           maxWidth="100%"
+           {...rest}
+           >
+           <MDXProvider components={components}>{children}</MDXProvider>
+         </Slide>
+       )

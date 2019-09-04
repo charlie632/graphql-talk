@@ -1,0 +1,15 @@
+const resolvers = {
+  Query: {
+    ...
+  },
+  Mutation: {
+    ...
+  },
+  // We add a resolver for the User Type
+  User: { 
+    orders: (root) => {
+      const userOrders = getUserOrders(root.id)
+      return userOrders
+    }
+  }
+}

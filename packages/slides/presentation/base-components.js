@@ -43,7 +43,7 @@ const _CombineBlockQuote = ({ children }) => (
 _CombineBlockQuote.propTypes = { children: PropTypes.node };
 
 const _CodePane = ({ children, language }) => (
-  <CodePane theme="external" lang="javascript" source={children} />
+  <CodePane theme="external" lang="graphql" source={children} />
 );
 
 _CodePane.propTypes = { code: PropTypes.string, language: PropTypes.string };

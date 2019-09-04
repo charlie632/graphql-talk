@@ -1,0 +1,19 @@
+const resolvers = {
+  Query: {
+    getUser: (_, { id }) => getUser(id),
+    getUserOrders: (_, { userId }) => {
+      const userOrders = getUserOrders(userId)
+      return userOrders
+    }
+  },
+  Mutation: {
+    addUser: (_, { user }) => {
+      users[user.id] = user
+      return user
+    },
+    addUserOrder: (_, { userId, selection, meal }) => {
+      orders.push({ userId, selection, meal})
+      return ({ selection, meal })
+    }
+  },
+}

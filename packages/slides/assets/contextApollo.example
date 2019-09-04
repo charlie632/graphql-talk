@@ -1,0 +1,8 @@
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  // You pass the necessary info. as part of the Express `req` object.
+  context: ({req}) => {
+    return {userId: req.userId}
+  },
+})

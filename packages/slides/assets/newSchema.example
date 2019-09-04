@@ -1,0 +1,14 @@
+type User {
+    name: String!
+    id: ID!
+    orders: [Order]
+    favouriteMeal: String #new
+  }
+
+# rest
+
+type Mutation {
+    addUser(user: UserInput): User
+    addUserOrder(userId: ID!, selection: Int, meal: String): Order
+    setFavouriteMeal(userId: ID!, meal): User #new
+  }

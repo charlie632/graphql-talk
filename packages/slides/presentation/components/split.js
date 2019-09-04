@@ -1,11 +1,20 @@
 import React from 'react'
-import {Heading, Text, CodePane} from 'spectacle'
+import {CodePane} from 'spectacle'
 import {useQuery, useMutation} from '@apollo/react-hooks'
 import {gql} from 'apollo-boost'
-import preloader from 'spectacle/lib/utils/preloader'
+import styled from 'styled-components'
+import {colors} from '../theme'
 import {queries, mutations} from './queries'
 
-const SplitPane = ({queryNumber, mutationNumber, isQuery = true}) => {
+const Button = styled.button`
+  border-radius: 5px;
+  background-color: ${() => colors.primary};
+  padding: 8px;
+  cursor: pointer;
+  border: 2px solid ${() => colors.secondary};
+`
+
+const SplitPane = ({query, mutation}) => {
   const [state, setState] = React.useState({
     loading: null,
     error: null,
@@ -13,9 +22,10 @@ const SplitPane = ({queryNumber, mutationNumber, isQuery = true}) => {
   })
   const [shoot, setShoot] = React.useState(false)
   const {error, loading, data} = state
-  const src = isQuery ? queries[queryNumber] : mutations[mutationNumber]
+  const isQuery = !!query
+  const src = query ? queries[query] : mutations[mutation]
   return (
-    <div>
+    <div className="heheheh">
       <div
         style={{
           display: 'flex',
@@ -24,7 +34,7 @@ const SplitPane = ({queryNumber, mutationNumber, isQuery = true}) => {
         }}>
         <div style={{width: '40%'}}>
           <p>query</p>
-          <CodePane lang="graphql" source={src} />
+          <CodePane lang="graphql" source={src} theme="external" />
         </div>
         <div style={{width: '40%'}}>
           <p>response</p>
@@ -33,7 +43,7 @@ const SplitPane = ({queryNumber, mutationNumber, isQuery = true}) => {
       </div>
       <div style={{width: '100%'}}>
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 40}}>
-          <button onClick={() => setShoot(true)}>🚀</button>
+          <Button onClick={() => setShoot(true)}>🚀 launch</Button>
         </div>
       </div>
       {isQuery && shoot && (
@@ -91,6 +101,7 @@ const Response = ({loading, error, data}) => {
   }
   return (
     <CodePane
+      theme="external"
       style={{maxHeight: '500px', overflowY: 'auto'}}
       lang="json"
       source={text}

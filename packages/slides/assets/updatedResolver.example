@@ -1,0 +1,4 @@
+setFavouriteMeal: (_, {meal}, {userId}) => {
+      const updatedUser = updateUser({favouriteMeal: meal, id: userId})
+      return updatedUser
+    },
