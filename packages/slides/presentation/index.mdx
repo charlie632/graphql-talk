@@ -1,0 +1,86 @@
+import {Cite} from 'spectacle';
+import {DarkSlide, CodeSlide} from './slides';
+import RegularComponent from './regular-component';
+import SplitPane from './components/split.js'
+
+
+![gql](https://www.amazeelabs.com/sites/default/files/styles/leading_image/public/images/current-affairs/graphql.png?h=7bd360a7&itok=q-GPNY3n)
+
+
+
+_By Carlos Ortiz_
+
+---
+export default DarkSlide
+
+export const transition = ['zoom']
+
+# Why the hype around this?
+
+---
+# 'cause it's
+![awesome](https://media3.giphy.com/media/mXnO9IiWWarkI/giphy.gif?cid=790b7611af0e6bfd8c9517f3bec5578fffb60ecf4ca0f76b&rid=giphy.gif)
+
+
+---
+
+# What is GraphQL?
+
+![a](https://i.blogs.es/e1ec6a/graphql-api-rest/450_1000.png)
+### A query language for your data
+
+---
+
+<RegularComponent/>
+
+---
+
+<SplitPane queryNumber={0}/>
+---
+
+
+<SplitPane queryNumber={1}/>
+---
+###### Typography
+
+# Heading 1
+
+## Heading 2
+
+### Heading 3
+
+#### Heading 4
+
+##### Heading 5
+
+###### Heading 6
+
+Standard Text
+
+---
+
+###### Standard List
+
+- Item 1
+- Item 2
+- Item 3
+- Item 4
+
+---
+
+> Example Quote
+
+<Cite>Author</Cite>
+
+---
+export default CodeSlide
+
+```graphql
+class SuperCoolComponent extends React.Component {
+  render() {
+    return (
+      <p>code slide works in markdown too whaaaaat</p>
+    );
+  }
+}
+```
